@@ -1,0 +1,37 @@
+{
+  "name"          : "__MSG_name__",
+  "description"   : "__MSG_description__",
+  "default_locale": "en",
+  "version"       : "1.0",
+  "browser_action": {
+    "default_icon" : "images/Evernote-off.png",
+    "default_title": "__MSG_title__"
+  },
+  "background"    : {
+    "page": "views/background.html"
+  },
+  "permissions": [
+    "tabs", "cookies", "notifications", "webNavigation", "storage",
+    "http://*/*", "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*.google.com/calendar/*",
+        "https://*.google.com/calendar/*"
+      ],
+      "js": [
+        "javascript/common/jquery.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "options_page": "views/options.html",
+  "icons": {
+    "16" : "images/Evernote-on.png",
+    "48" : "images/Evernote-on.png",
+    "128": "images/Evernote-on.png"
+  },
+  "minimum_chrome_version": "13.0.782.107",
+  "manifest_version": 2
+}

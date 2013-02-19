@@ -1,0 +1,17 @@
+{
+    "version":{
+        "message":"${version}"
+    },
+    "name":{
+        "message":"EVERDU - EVERnote DUplicated"
+    },
+    "description":{
+        "message":"Chrome extension that checks whether you have this url in your notes or not"
+    },
+    "title":{
+        "message":"EVERDU - EVERnote DUplicated"
+    },
+    "loginTitle":{
+        "message":""
+    }
+}
