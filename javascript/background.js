@@ -37,6 +37,13 @@ function onClicked(workmode, tab) {
 }
 
 function verify(url) {
+    if (Eventnote.Auth.get_auth_token() === undefined) {
+        Eventnote.Auth.authenticate();
+        return;
+    } else {
+        chrome.browserAction.setIcon({path:"../images/Evernote-on.png"});
+    }
+
     if (url !== '') {
         var notesTransport = new Thrift.Transport(Eventnote.Auth.oauth.getParameter(Eventnote.Auth.note_store_url_param));
         var notesProtocol = new Thrift.Protocol(notesTransport);
@@ -86,8 +93,8 @@ $(function() {
         });
     });
 
-    // work mode, by default, is to check every url (can be changed on the popup.html)
-    chrome.storage.sync.set({ 'everduworkmode': 'all' });
+    // work mode, by default, is to check urls on-demand (can be changed on the popup.html)
+    chrome.storage.sync.set({ 'everduworkmode': 'ondemand' });
 
     // se the default icon (gray = not connected)
     chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});

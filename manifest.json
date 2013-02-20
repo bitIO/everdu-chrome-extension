@@ -1,11 +1,10 @@
 {
-  "name"          : "__MSG_name__",
-  "description"   : "__MSG_description__",
-  "default_locale": "en",
-  "version"       : "1.0",
+  "name"          : "Evernote Duplicated - EVERDU",
+  "description"   : "Chrome extension that checks whether you have this url in your notes or not",
+  "version"       : "1.0.1",
   "browser_action": {
     "default_icon" : "images/Evernote-off.png",
-    "default_title": "__MSG_title__"
+    "default_title": "EVERDU - EVERnote DUplicated"
   },
   "background"    : {
     "page": "views/background.html"
@@ -13,18 +12,6 @@
   "permissions": [
     "tabs", "cookies", "notifications", "webNavigation", "storage",
     "http://*/*", "https://*/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "http://*.google.com/calendar/*",
-        "https://*.google.com/calendar/*"
-      ],
-      "js": [
-        "javascript/common/jquery.js"
-      ],
-      "run_at": "document_end"
-    }
   ],
   "options_page": "views/options.html",
   "icons": {

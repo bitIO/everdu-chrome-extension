@@ -21,8 +21,8 @@ jQuery(function ($) {
       'request_url'    : 'https://www.evernote.com/oauth',
       'authorize_url'  : 'https://www.evernote.com/OAuth.action',
       'access_url'     : 'https://www.evernote.com/oauth',
-      'consumer_key'   : 'bit_jammer-7794',
-      'consumer_secret': '42cfa09d08e83c11',
+      'consumer_key'   : 'bit_jammer-9517',
+      'consumer_secret': '802513e24e7928b4',
       'scope'          : '',
       'app_name'       : 'Everdu Chrome Extension',
       'callback_page'  : 'views/chrome_ex_oauth.html'
