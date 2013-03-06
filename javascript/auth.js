@@ -100,4 +100,7 @@ jQuery(function ($) {
         return Eventnote.Auth.oauth.getToken();
     };
 
+    Eventnote.Auth.logout = function () {
+        Eventnote.Auth.oauth.clearTokens();
+    }
 });

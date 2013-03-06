@@ -38,6 +38,7 @@ function onClicked(workmode, tab) {
 
 function verify(url) {
     if (Eventnote.Auth.get_auth_token() === undefined) {
+        chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
         Eventnote.Auth.authenticate();
         return;
     } else {
@@ -55,17 +56,29 @@ function verify(url) {
 
         var filter = new NoteFilter();
         filter.words = "sourceURL:" + url + "*";
-        var results = noteStore.findNotes(Eventnote.Auth.get_auth_token(), filter, 0, 100);
-        var notes = results.notes;
-        var totalNotes = 0;
-        for (var i in notes) {
-            totalNotes++;
-        }
+        try {
+            var results = noteStore.findNotes(Eventnote.Auth.get_auth_token(), filter, 0, 100);
+            var notes = results.notes;
+            var totalNotes = 0;
+            for (var i in notes) {
+                totalNotes++;
+            }
 
-        if (totalNotes === 0) {
-            chrome.browserAction.setBadgeText({text: 'no'});
-        } else {
-            chrome.browserAction.setBadgeText({text: 'yes:' + totalNotes});
+            if (totalNotes === 0) {
+                chrome.browserAction.setBadgeText({text: 'no'});
+            } else {
+                chrome.browserAction.setBadgeText({text: 'yes:' + totalNotes});
+            }
+        } catch(e) {
+            if (e.errorCode === 9 && e.parameter === "password") {
+                console.log('It seems you need to authenticate again.');
+                Eventnote.Auth.logout();
+                chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
+            } else {
+                Eventnote.Logger.error(e);
+                console.log('something is not working:');
+                console.log(e);
+            }
         }
     }
 }
