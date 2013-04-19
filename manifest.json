@@ -1,7 +1,7 @@
 {
   "name"          : "Evernote Duplicated - EVERDU",
   "description"   : "Chrome extension that checks whether you have this url in your notes or not",
-  "version"       : "1.0.1",
+  "version"       : "1.0.3",
   "default_locale": "en",
   "browser_action": {
     "default_icon" : "images/Evernote-off.png",
