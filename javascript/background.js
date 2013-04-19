@@ -1,3 +1,6 @@
+// TODO: some cache cleaning strategy.
+
+
 function onUpdated(workmode, changeInfo, tab) {
     if (workmode && workmode !== undefined && workmode === 'all') {
         if (changeInfo !== undefined && changeInfo.status === "complete") {
@@ -15,7 +18,7 @@ function onActivated(workmode, activeInfo) {
                 // do this to get the correct tab (the user may have detached tabs)
                 for (var i = tab.length - 1; i >= 0; i--) {
                     if (tab[i].id === activeInfo.tabId) {
-                        verify(tab[i].url);
+                        verify(tab[i].url, true);
                     }
                 }
             }
@@ -26,7 +29,9 @@ function onActivated(workmode, activeInfo) {
 }
 
 function onClicked(workmode, tab) {
-    if (workmode && workmode !== undefined && workmode === 'ondemand'){
+    // if clicked, load Evernote status, or reload it from remote 
+    // server without resorting to the cache.
+    if (workmode && workmode !== undefined) {
         if (tab.status && tab.status !== undefined) {
             if (tab.status === "complete") {
                 verify(tab.url);
@@ -36,7 +41,11 @@ function onClicked(workmode, tab) {
 
 }
 
-function verify(url) {
+var url_cache = {};
+
+function verify(url, use_cached) {
+    if (typeof(use_cached) === 'undefined') use_cached=false;
+
     if (Eventnote.Auth.get_auth_token() === undefined) {
         chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
         Eventnote.Auth.authenticate();
@@ -46,6 +55,11 @@ function verify(url) {
     }
 
     if (url !== '') {
+        if ((use_cached) && typeof(url_cache[url]) !== 'undefined') {
+                chrome.browserAction.setBadgeText(url_cache[url]);
+                return;
+               }
+
         var notesTransport = new Thrift.Transport(Eventnote.Auth.oauth.getParameter(Eventnote.Auth.note_store_url_param));
         var notesProtocol = new Thrift.Protocol(notesTransport);
         var noteStore = new NoteStoreClient(notesProtocol, notesProtocol);
@@ -80,6 +94,10 @@ function verify(url) {
                 console.log(e);
             }
         }
+        
+        url_cache[url] = badgeText;
+        chrome.browserAction.setBadgeText(badgeText);
+
     }
 }
 
