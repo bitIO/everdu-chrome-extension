@@ -1,17 +1,39 @@
 <!DOCTYPE html>
-
 <html manifest="manifest.cache">
   <head>
       <title id="title">Everdu - Options and configuration</title>
       <script type="text/javascript" src="../javascript/common/jquery.js"></script>
       <script type="text/javascript" src="../javascript/options.js"></script>
+      <script type="text/javascript" src="../javascript/common/utils.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.8/semantic.min.css"
+        media="screen" title="no title" charset="utf-8">
   </head>
 
-  <body>
-    <div style="width: 150px">
-      <label id="check-every-url-label">Check every url:</label>
-      <input type="checkbox" id="check-every-url" value="all"/>
+  <body class="ui container">
+    <div class="ui segment">
+      <h1 class="ui header">
+        <i class="settings icon"></i> EVERnote DUplicated Settings
+      </h1>
+    </div>
+    <div class="ui form">
+      <div class="field">
+        <div class="ui message">
+          <div class="header">Check every url</div>
+          <p>
+            When checked, every time a new url is loaded, it will be checked
+            against Evernote or the local storage.
+          </p>
+        </div>
+        <div class="ui checkbox">
+          <label id="check-every-url-label">Check every url</label>
+          <input type="checkbox" id="check-every-url" value="all"/>
+        </div>
+      </div>
+      <div class="field">
+        <div id="clear-local-storage" class="ui red button">
+          <i class="trash icon"></i> Clear local storage
+        </div>
+      </div>
     </div>
   </body>
-
 </html>

@@ -3,14 +3,42 @@
  */
 function clearStorage() {
   localStorage.clear();
-  setIcon();
+  setIconBagdAuthIndicator(false);
+}
+
+function setIconBagdAuthIndicator(auth) {
+  if (!auth) {
+    setBadgeText('Disconnected');
+  } else {
+    setBadgeText();
+  }
 }
 
 /**
  * Method sets icon that tells user is he logged in or not.
  */
-function setIcon() {
-  chrome.browserAction.setIcon({path:"../images/icon_19_grey.png"});
+function setIcon(grey) {
+  var iconName = '/images/icon_19';
+  if (grey) {
+    iconName += '.png'
+    // iconName += '_grey.png'
+  } else {
+    iconName += '.png'
+  }
+  var iconDef = { path: { '19': iconName } };
+  chrome.browserAction.setIcon(iconDef, function() {
+    if (chrome.runtime.lastError) {
+      console.error('setIcon', chrome.runtime.lastError.message);
+      console.error(chrome.runtime.lastError);
+    }
+  });
+}
+
+function setBadgeText (txt) {
+  if (!txt) {
+    txt = '';
+  }
+  chrome.browserAction.setBadgeText({ text: txt });
 }
 
 String.prototype.format = function() {

@@ -6,7 +6,7 @@ function onUpdated(workmode, changeInfo, tab) {
       verify(tab.url);
     }
   } else {
-    chrome.browserAction.setBadgeText({text: ''});
+    setBadgeText();
   }
 }
 
@@ -23,7 +23,7 @@ function onActivated(workmode, activeInfo) {
       }
     });
   } else {
-    chrome.browserAction.setBadgeText({text: ''});
+    setBadgeText();
   }
 }
 
@@ -33,7 +33,7 @@ function onClicked(workmode, tab) {
   if (workmode && workmode !== undefined) {
     if (tab.status && tab.status !== undefined) {
       if (tab.status === "complete") {
-        verify(tab.url);
+        verify(tab);
       }
     }
   }
@@ -44,20 +44,21 @@ var url_cache = {};
 
 // URL VERIFICATION
 // -----------------------------------------------------------------------------
-function verify(url, use_cached) {
+function verify(tab, use_cached) {
+  var url = tab.url;
   if (typeof(use_cached) === 'undefined') use_cached=false;
 
   if (Eventnote.Auth.get_auth_token() === undefined) {
-    chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
+    setIconBagdAuthIndicator(false);
     Eventnote.Auth.authenticate();
     return;
   } else {
-    chrome.browserAction.setIcon({path:"../images/Evernote-on.png"});
+    setIconBagdAuthIndicator(true);
   }
 
   if (url !== '') {
     if ((use_cached) && typeof(url_cache[url]) !== 'undefined') {
-      chrome.browserAction.setBadgeText(url_cache[url]);
+      setBadgeText(url_cache[url]);
       return;
      }
     // Eventnote.Logger.info('[EVERDU] Verify url:' + url);
@@ -71,24 +72,26 @@ function verify(url, use_cached) {
     }
 
     var filter = new NoteFilter();
-    filter.words = "sourceURL:" + url + "*";
+    filter.words = "sourceURL:\"" + url + "*\"";    
     try {
-      var results = noteStore.findNotes(Eventnote.Auth.get_auth_token(), filter, 0, 100);
-      var notes = results.notes;
-      var totalNotes = 0;
-      for (var i in notes) {
-        totalNotes++;
-      }
+      var results = noteStore.findNotes(Eventnote.Auth.get_auth_token(), filter,
+        0, 100);
 
-      if (totalNotes === 0) {
-        chrome.browserAction.setBadgeText({text: 'no'});
+      var badgeText;
+      if (results.notes.length === 0) {
+        badgeText = 'no';
       } else {
-        chrome.browserAction.setBadgeText({text: 'yes:' + totalNotes});
+        badgeText = 'yes:' + results.notes.length;
+      }
+      setBadgeText(badgeText);
+      if (use_cached) {
+        url_cache[url] = badgeText;
       }
     } catch(e) {
+      setBadgeText('ERR!');
       if (e.errorCode === 9 ){
         Eventnote.Auth.logout();
-        chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
+        setIconBagdAuthIndicator(false);
         if (e.parameter === "password" ) {
           window.alert("[EVERDU] Please authenticate with evernote again");
         }
@@ -105,10 +108,6 @@ function verify(url, use_cached) {
         console.log(e);
       }
     }
-
-    url_cache[url] = badgeText;
-    chrome.browserAction.setBadgeText(badgeText);
-
   }
 }
 
@@ -138,14 +137,8 @@ $(function() {
   // work mode, by default, is to check urls on-demand (can be changed on the popup.html)
   chrome.storage.sync.set({ 'everduworkmode': 'ondemand' });
 
-  // se the default icon (gray = not connected)
-  chrome.browserAction.setIcon({path:"../images/Evernote-off.png"});
-  chrome.browserAction.setBadgeText({text: "X"});
-
   // login to evernote using oatuh
   Eventnote.Auth.authenticate( function() {
-    // change the icon and remove badge text
-    chrome.browserAction.setIcon({path:"../images/Evernote-on.png"});
-    chrome.browserAction.setBadgeText({text: ''});
+    setBadgeText(); // removes any badge text
   });
 });
