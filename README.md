@@ -8,6 +8,11 @@ It has to work modes. Default is, **check on demand**, that means, the extensió
 To **change the configuration**, just right click on the extension's icon and go to configuration and click on the checkbox that appears there. That's all.
 
 ### CHANGELOG
+
+#### 1.0.6: 2013/04/22
+
+* Fix API call to find notes by source url
+
 #### 1.0.4: 2013/04/22
 Changes mad by [alanfranz](https://github.com/alanfranz). General idea is to cache results already obtained from Evernote. This is mostly benefit when working with the 'all' mode.
 
